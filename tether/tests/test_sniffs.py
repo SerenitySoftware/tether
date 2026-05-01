@@ -1,6 +1,6 @@
 import unittest
 
-from chains import sniff
+from tether import sniff
 
 
 class TestSniffs(unittest.TestCase):

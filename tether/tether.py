@@ -1,7 +1,7 @@
 from .sniff import isdictlike, isiterable
 
 
-class Chain:
+class Tether:
     __slots__ = ("_wrapped",)
 
     def __init__(self, obj=None):
@@ -32,12 +32,12 @@ class Chain:
             attr = wrapped.get(name, None)
             if attr is None and name in ("keys", "items", "values") and hasattr(wrapped, name):
                 attr = getattr(wrapped, name)
-            return Chain(attr)
+            return Tether(attr)
 
         if wrapped is None:
-            return Chain(None)
+            return Tether(None)
 
-        return Chain(getattr(wrapped, name, None))
+        return Tether(getattr(wrapped, name, None))
 
     def __getitem__(self, key):
         item = None
@@ -47,7 +47,7 @@ class Chain:
             except (KeyError, IndexError):
                 pass
 
-        return Chain(item)
+        return Tether(item)
 
     def __iter__(self):
         if isiterable(self._wrapped):
@@ -108,85 +108,85 @@ class Chain:
         if self._wrapped is None:
             return self.__maybe_wrap(other)
 
-        return Chain(self._wrapped + self.__maybe_unwrap(other))
+        return Tether(self._wrapped + self.__maybe_unwrap(other))
 
     def __sub__(self, other):
         if self._wrapped is None:
             return self.__maybe_wrap(-other)
 
-        return Chain(self._wrapped - self.__maybe_unwrap(other))
+        return Tether(self._wrapped - self.__maybe_unwrap(other))
 
     def __mul__(self, other):
         if self._wrapped is None or not other:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self._wrapped * self.__maybe_unwrap(other))
+        return Tether(self._wrapped * self.__maybe_unwrap(other))
 
     def __truediv__(self, other):
         if self._wrapped is None or not other:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self._wrapped / self.__maybe_unwrap(other))
+        return Tether(self._wrapped / self.__maybe_unwrap(other))
 
     def __floordiv__(self, other):
         if self._wrapped is None or not other:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self._wrapped // self.__maybe_unwrap(other))
+        return Tether(self._wrapped // self.__maybe_unwrap(other))
 
     def __mod__(self, other):
         if self._wrapped is None or not other:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self._wrapped % self.__maybe_unwrap(other))
+        return Tether(self._wrapped % self.__maybe_unwrap(other))
 
     def __pow__(self, other):
         if self._wrapped is None:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self._wrapped ** self.__maybe_unwrap(other))
+        return Tether(self._wrapped ** self.__maybe_unwrap(other))
 
     def __radd__(self, other):
         if self._wrapped is None:
             return self.__maybe_wrap(other)
 
-        return Chain(self.__maybe_unwrap(other) + self._wrapped)
+        return Tether(self.__maybe_unwrap(other) + self._wrapped)
 
     def __rsub__(self, other):
         if self._wrapped is None:
             return self.__maybe_wrap(other)
 
-        return Chain(self.__maybe_unwrap(other) - self._wrapped)
+        return Tether(self.__maybe_unwrap(other) - self._wrapped)
 
     def __rmul__(self, other):
         if self._wrapped is None or not other:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self.__maybe_unwrap(other) * self._wrapped)
+        return Tether(self.__maybe_unwrap(other) * self._wrapped)
 
     def __rtruediv__(self, other):
         if not self._wrapped:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self.__maybe_unwrap(other) / self._wrapped)
+        return Tether(self.__maybe_unwrap(other) / self._wrapped)
 
     def __rfloordiv__(self, other):
         if not self._wrapped:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self.__maybe_unwrap(other) // self._wrapped)
+        return Tether(self.__maybe_unwrap(other) // self._wrapped)
 
     def __rmod__(self, other):
         if not self._wrapped:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self.__maybe_unwrap(other) % self._wrapped)
+        return Tether(self.__maybe_unwrap(other) % self._wrapped)
 
     def __rpow__(self, other):
         if self._wrapped is None:
-            return Chain(0)
+            return Tether(0)
 
-        return Chain(self.__maybe_unwrap(other) ** self._wrapped)
+        return Tether(self.__maybe_unwrap(other) ** self._wrapped)
 
     def __int__(self):
         if self._wrapped is None:
@@ -208,14 +208,14 @@ class Chain:
 
     @staticmethod
     def __maybe_wrap(obj):
-        if not isinstance(obj, Chain):
-            obj = Chain(obj)
+        if not isinstance(obj, Tether):
+            obj = Tether(obj)
 
         return obj
 
     @staticmethod
     def __maybe_unwrap(obj):
-        if isinstance(obj, Chain):
+        if isinstance(obj, Tether):
             return obj._wrapped
 
         return obj
