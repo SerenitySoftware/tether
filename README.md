@@ -47,7 +47,7 @@ Chains is available on PyPI, so you can install it like any other Python package
 pip install chains
 ```
 
-Chains is [automatically tested with 100% coverage](https://github.com/SerenitySoftware/chains/blob/master/.github/workflows/verify.yml) on Python 3.8 and above for Ubuntu, macOS, and Windows.
+Chains is [automatically tested with 100% coverage](https://github.com/SerenitySoftware/chains/blob/master/.github/workflows/verify.yml) on Python 3.10 and above for Ubuntu, macOS, and Windows.
 
 
 ## Why Chains?
