@@ -112,9 +112,9 @@ print(data.price * data.quantity)  # 500
 print(data.missing + 10)  # 10
 print(data.quantity ** 3)  # 125
 
-# Chains even allows division by zero, returning None instead.
+# Chains even allows division by zero, returning 0 instead.
 # Not even Stephen Hawking could do that.
-print(data.missing / 0)  # None
+print(data.missing / 0)  # 0
 ```
 
 ### Usage: Lists and other iterables
