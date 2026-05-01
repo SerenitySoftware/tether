@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/tether
+      url: https://test.pypi.org/p/daisies
     permissions:
       id-token: write
     steps:
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/tether
+      url: https://pypi.org/p/daisies
     permissions:
       id-token: write
     steps:

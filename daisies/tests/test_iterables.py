@@ -1,11 +1,11 @@
 import unittest
 
-from tether import Tether
+from daisies import Chain
 
 
 class TestIterables(unittest.TestCase):
     def test_dict_keys(self):
-        wrapped = Tether({"key": "value", "nested": {"key": "value"}})
+        wrapped = Chain({"key": "value", "nested": {"key": "value"}})
         assert list(wrapped.keys()) == ["key", "nested"]
         assert list(wrapped.nested.keys()) == ["key"]
         assert "key" in wrapped.keys()
@@ -13,7 +13,7 @@ class TestIterables(unittest.TestCase):
         assert "missing" not in wrapped
 
     def test_lists(self):
-        wrapped = Tether([1, 2, 3])
+        wrapped = Chain([1, 2, 3])
         assert wrapped[0] == 1
         assert wrapped[1] == 2
         assert wrapped[2] == 3
@@ -30,12 +30,12 @@ class TestIterables(unittest.TestCase):
             assert index + 1 == item
 
     def test_sets(self):
-        assert Tether(set()) == set()
-        assert Tether({1, 2, 3}) == {1, 2, 3}
-        assert 1 in Tether({1, 2, 3})
+        assert Chain(set()) == set()
+        assert Chain({1, 2, 3}) == {1, 2, 3}
+        assert 1 in Chain({1, 2, 3})
 
     def test_strings(self):
-        wrapped = Tether("abcdefghijklmnopqrstuvwxyz")
+        wrapped = Chain("abcdefghijklmnopqrstuvwxyz")
         assert wrapped[0] == "a"
         assert wrapped[1] == "b"
         assert wrapped[0:5] == "abcde"
@@ -46,17 +46,17 @@ class TestIterables(unittest.TestCase):
         assert "xyz" in wrapped
 
     def test_generators(self):
-        wrapped = Tether(range(5))
+        wrapped = Chain(range(5))
 
         for index, item in enumerate(wrapped):
             assert index == item
 
     def test_non_iterable(self):
         with self.assertRaises(TypeError):
-            enumerate(Tether(1))
+            enumerate(Chain(1))
 
     def test_no_contains(self):
-        self.assertFalse("x" in Tether(None))
+        self.assertFalse("x" in Chain(None))
 
     def test_no_len(self):
-        self.assertEqual(len(Tether(None)), 0)
+        self.assertEqual(len(Chain(None)), 0)

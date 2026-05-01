@@ -1,9 +1,9 @@
-# Tether
-Tether is a Python library that provides easy, safe navigation for complex objects.
+# Daisies
+Daisies is a Python library that provides easy, safe navigation for complex objects.
 
 ```python
 
-from tether import Tether
+from daisies import Chain
 
 raw = {
     "never": {
@@ -26,7 +26,7 @@ raw = {
         }
     ]
 }
-data = Tether(raw)
+data = Chain(raw)
 
 
 # Accessing nested dict keys that may or may not exist
@@ -41,38 +41,38 @@ print(data.artists[2].name)  # None
 
 
 ## Installation and Support
-Tether is available on PyPI, so you can install it like any other Python package, using the packager of your choice.
+Daisies is available on PyPI, so you can install it like any other Python package, using the packager of your choice.
 
 ```bash
-pip install tether
+pip install daisies
 ```
 
-Tether is [automatically tested with 100% coverage](https://github.com/SerenitySoftware/tether/blob/master/.github/workflows/verify.yml) on Python 3.10 and above for Ubuntu, macOS, and Windows.
+Daisies is [automatically tested with 100% coverage](https://github.com/SerenitySoftware/daisies/blob/master/.github/workflows/verify.yml) on Python 3.10 and above for Ubuntu, macOS, and Windows.
 
 
-## Why Tether?
+## Why Daisies?
 
-Tether makes data navigation easy and safe so you don't have to constantly null-check, coalesce, try/except, and if/else.
+Daisies makes data navigation easy and safe so you don't have to constantly null-check, coalesce, try/except, and if/else.
 
 You want data? Just go get it.
 
-Simply wrap your raw data in a `Tether` object, which allows you to access its attributes using the dot notation.
-If a key, attribute, or list index does not exist, the Tether object will return `None` instead of raising an exception.
+Simply wrap your raw data in a `Chain` object, which allows you to access its attributes using the dot notation.
+If a key, attribute, or list index does not exist, the Chain object will return `None` instead of raising an exception.
 
 This is particularly useful when dealing with complex data structures, such as JSON responses from APIs, where you can't always guarantee the presence of every key or index.
 
 ## Usage
-Tether aims to be as simple and intuitive as possible, so you can use it without having to write tons of code for null-checking and type validation.
+Daisies aims to be as simple and intuitive as possible, so you can use it without having to write tons of code for null-checking and type validation.
 
-For the most part, you can just use Tether and pretend that you're working with the raw data directly.
+For the most part, you can just use Daisies and pretend that you're working with the raw data directly.
 However, there are some important differences to be aware of, especially when working with scalar values, arithmetic operations, and identity comparisons.
 
 ### Usage: Scalar values
-Tether allows you to seamlessly work with scalar values, such as strings, integers, and Booleans.
+Daisies allows you to seamlessly work with scalar values, such as strings, integers, and Booleans.
 This allows you to operate on your data naturally.
 
 ```python
-data = Tether({
+data = Chain({
     "name": "John Doe",
     "age": 30,
     "is_active": True
@@ -83,10 +83,10 @@ print(data.age)  # 30
 print(data.is_active)  # True
 ```
 
-You can operate at any point on the Tether object, and it will return the expected result.
+You can operate at any point on the Chain object, and it will return the expected result.
 
 ```python
-data = Tether({
+data = Chain({
     "name": "John Doe",
     "age": 30,
     "is_active": True
@@ -98,12 +98,12 @@ print(data.age + 10)  # 40
 
 
 ### Usage: Numeric values and arithmetic operations
-Tether allows you to work with numeric values and perform arithmetic operations on them,
+Daisies allows you to work with numeric values and perform arithmetic operations on them,
 but certain operations work differently from usual to ensure that you don't raise errors,
 such as coercing `None` values to zero.
 
 ```python
-data = Tether({
+data = Chain({
     "price": 100,
     "quantity": 5
 })
@@ -112,18 +112,18 @@ print(data.price * data.quantity)  # 500
 print(data.missing + 10)  # 10
 print(data.quantity ** 3)  # 125
 
-# Tether even allows division by zero, returning 0 instead.
+# Chain even allows division by zero, returning 0 instead.
 # Not even Stephen Hawking could do that.
 print(data.missing / 0)  # 0
 ```
 
 ### Usage: Lists and other iterables
-Tether allows you to work with lists, sets, and other iterables in a natural way.
-You can access items by index and iterate over them. If they don't exist, Tether will return `None`.
+Daisies allows you to work with lists, sets, and other iterables in a natural way.
+You can access items by index and iterate over them. If they don't exist, Daisies will return `None`.
 
 
 ```python
-data = Tether({
+data = Chain({
     "names": ["Alice", "Bob", "Charlie"]
 })
 
@@ -135,10 +135,10 @@ for index, name in enumerate(data.names):
 ```
 
 ### Working with dicts and nested data
-Tether allows you to work with nested data structures quickly and easily. No more null-checking or catching KeyErrors.
+Daisies allows you to work with nested data structures quickly and easily. No more null-checking or catching KeyErrors.
 
 ```python
-data = Tether({
+data = Chain({
     "user": {
         "name": "Alice",
         "address": {
@@ -155,16 +155,16 @@ print(data.this.is.missing)  # None
 
 
 ### Usage: Special values and identity comparisons
-When you access items through a `Tether`, it's not directly returning the value, it's returning a `Tether` wrapping the value.
-A `Tether` is a very powerful and dynamic object that allows all sorts of operations on it, but it's not the same as the raw value.
+When you access items through a `Chain`, it's not directly returning the value, it's returning a `Chain` wrapping the value.
+A `Chain` is a very powerful and dynamic object that allows all sorts of operations on it, but it's not the same as the raw value.
 
-This means there are a few special cases to be aware of. Because values are wrapped in a `Tether`, you can't use the identity operator `is` to check if a value is `None`, `True`, or `False` like usual.
+This means there are a few special cases to be aware of. Because values are wrapped in a `Chain`, you can't use the identity operator `is` to check if a value is `None`, `True`, or `False` like usual.
 
 But good news! If you want to compare identity, you can call the key like it's a function, and it'll return the raw value.
 
 ```python
 
-data = Tether({
+data = Chain({
     "name": "John Doe",
     "age": 30,
     "is_active": True
@@ -177,10 +177,10 @@ print(data.missing.key() is None)  # True :)
 
 ### Usage: Navigating reserved words and invalid keys
 Certain names are reserved in Python, so if your data contains keys that are reserved words or against the Python grammar,
-you can still access them by using the square bracket notation. In fact, you never have to use the dot notation if you hate it! Either way Tether will make sure it's safe navigation.
+you can still access them by using the square bracket notation. In fact, you never have to use the dot notation if you hate it! Either way Daisies will make sure it's safe navigation.
 
 ```python
-data = Tether({
+data = Chain({
     "123": "Hello World!",
     "jeffrey-epstein": "Didn't kill himself"
 })

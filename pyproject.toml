@@ -1,5 +1,5 @@
 [project]
-name = "tether"
+name = "daisies"
 version = "0.1.0"
 description = "Python safe navigation for complex objects"
 authors = [
@@ -7,7 +7,7 @@ authors = [
 ]
 license = "Unlicense"
 readme = "README.md"
-keywords = ["tether", "safe navigation", "data access"]
+keywords = ["daisies", "safe navigation", "data access"]
 requires-python = ">=3.10,<4.0"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -23,11 +23,11 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/SerenitySoftware/tether"
+Repository = "https://github.com/SerenitySoftware/daisies"
 
 [tool.poetry]
-packages = [{include = "tether"}]
-exclude = ["tether/tests"]
+packages = [{include = "daisies"}]
+exclude = ["daisies/tests"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.3"
