@@ -37,3 +37,24 @@ class TestNavigation(unittest.TestCase):
         assert Chain([{"key": "value"}])[0] == {"key": "value"}
         assert Chain({"items": [55, 8, 59]}).items[1] == 8
         assert Chain({"items": [{"hello": "world"}]}).items[0].hello == "world"
+
+    def test_attribute_delegates_to_wrapped(self):
+        assert Chain("hello").upper() == "HELLO"
+        assert Chain("   hi   ").strip() == "hi"
+        assert Chain([1, 2, 3]).index(2) == 1
+        assert Chain({"name": "John"}).name.upper() == "JOHN"
+
+    def test_attribute_missing_on_wrapped(self):
+        assert Chain("hello").nonexistent() is None
+        assert Chain([1, 2, 3]).does_not_exist() is None
+
+    def test_attribute_on_none_wrapped(self):
+        assert Chain(None).anything() is None
+        assert Chain(None).deeply.nested.path() is None
+
+    def test_dunder_attributes_not_delegated(self):
+        # Dunder lookups should fall through to AttributeError so Python's
+        # protocols (pickle, copy, repr, etc.) work correctly instead of
+        # being intercepted into Chain(None) and recursing.
+        with self.assertRaises(AttributeError):
+            Chain({"a": 1}).__nonexistent_dunder__

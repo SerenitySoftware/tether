@@ -2,6 +2,8 @@ from .sniff import isdictlike, isiterable
 
 
 class Chain:
+    __slots__ = ("_wrapped",)
+
     def __init__(self, obj=None):
         self._wrapped = obj
 
@@ -21,14 +23,21 @@ class Chain:
         return hash(self._wrapped)
 
     def __getattr__(self, name):
-        attr = None
+        if name.startswith("__") and name.endswith("__"):
+            raise AttributeError(name)
 
-        if isdictlike(self._wrapped):
-            attr = self._wrapped.get(name, None)
-            if attr is None and name in ["keys", "items", "values"] and hasattr(self._wrapped, name):
-                attr = getattr(self._wrapped, name)
+        wrapped = self._wrapped
 
-        return Chain(attr)
+        if isdictlike(wrapped):
+            attr = wrapped.get(name, None)
+            if attr is None and name in ("keys", "items", "values") and hasattr(wrapped, name):
+                attr = getattr(wrapped, name)
+            return Chain(attr)
+
+        if wrapped is None:
+            return Chain(None)
+
+        return Chain(getattr(wrapped, name, None))
 
     def __getitem__(self, key):
         item = None
@@ -136,6 +145,66 @@ class Chain:
             return Chain(0)
 
         return Chain(self._wrapped ** self.__maybe_unwrap(other))
+
+    def __radd__(self, other):
+        if self._wrapped is None:
+            return self.__maybe_wrap(other)
+
+        return Chain(self.__maybe_unwrap(other) + self._wrapped)
+
+    def __rsub__(self, other):
+        if self._wrapped is None:
+            return self.__maybe_wrap(other)
+
+        return Chain(self.__maybe_unwrap(other) - self._wrapped)
+
+    def __rmul__(self, other):
+        if self._wrapped is None or not other:
+            return Chain(0)
+
+        return Chain(self.__maybe_unwrap(other) * self._wrapped)
+
+    def __rtruediv__(self, other):
+        if not self._wrapped:
+            return Chain(0)
+
+        return Chain(self.__maybe_unwrap(other) / self._wrapped)
+
+    def __rfloordiv__(self, other):
+        if not self._wrapped:
+            return Chain(0)
+
+        return Chain(self.__maybe_unwrap(other) // self._wrapped)
+
+    def __rmod__(self, other):
+        if not self._wrapped:
+            return Chain(0)
+
+        return Chain(self.__maybe_unwrap(other) % self._wrapped)
+
+    def __rpow__(self, other):
+        if self._wrapped is None:
+            return Chain(0)
+
+        return Chain(self.__maybe_unwrap(other) ** self._wrapped)
+
+    def __int__(self):
+        if self._wrapped is None:
+            return 0
+
+        return int(self._wrapped)
+
+    def __float__(self):
+        if self._wrapped is None:
+            return 0.0
+
+        return float(self._wrapped)
+
+    def __index__(self):
+        if self._wrapped is None:
+            return 0
+
+        return self._wrapped.__index__()
 
     @staticmethod
     def __maybe_wrap(obj):

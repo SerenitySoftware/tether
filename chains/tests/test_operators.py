@@ -80,3 +80,47 @@ class TestNavigation(unittest.TestCase):
         assert Chain(5) // 10 == 0
         assert Chain(4) // Chain(3) == 1
         assert Chain(5) // 0 == 0
+
+
+class TestReflectedOperators(unittest.TestCase):
+    """Operators where the Chain is on the right-hand side: `1 + Chain(2)`."""
+
+    def test_radd_number(self):
+        assert 1 + Chain(2) == 3
+        assert 1.5 + Chain(2) == 3.5
+        assert 5 + Chain(None) == 5
+
+    def test_radd_string_and_list(self):
+        assert "hello" + Chain(" world") == "hello world"
+        assert [1, 2] + Chain([3, 4]) == [1, 2, 3, 4]
+
+    def test_rsub_number(self):
+        assert 10 - Chain(3) == 7
+        assert 5 - Chain(None) == 5
+        assert 0 - Chain(5) == -5
+
+    def test_rmul_number(self):
+        assert 3 * Chain(4) == 12
+        assert 0 * Chain(5) == 0
+        assert 5 * Chain(None) == 0
+        assert "a" * Chain(3) == "aaa"
+        assert [1] * Chain(3) == [1, 1, 1]
+
+    def test_rtruediv_number(self):
+        assert 10 / Chain(2) == 5
+        assert 10 / Chain(0) == 0
+        assert 10 / Chain(None) == 0
+
+    def test_rfloordiv_number(self):
+        assert 10 // Chain(3) == 3
+        assert 10 // Chain(0) == 0
+        assert 10 // Chain(None) == 0
+
+    def test_rmod_number(self):
+        assert 10 % Chain(3) == 1
+        assert 10 % Chain(0) == 0
+        assert 10 % Chain(None) == 0
+
+    def test_rpow_number(self):
+        assert 2 ** Chain(10) == 1024
+        assert 5 ** Chain(None) == 0
