@@ -1,6 +1,6 @@
 import unittest
 
-from tether import Tether
+from daisies import Chain
 
 
 class TestReadmeExamples(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestReadmeExamples(unittest.TestCase):
                 {"name": "Michael Jackson", "genre": "Pop"},
             ],
         }
-        data = Tether(raw)
+        data = Chain(raw)
         assert data.never.gonna.give.you.up == "never gonna let you down"
         assert data.let.you.down() is None
         assert data.artists[0].name == "Rick Astley"
@@ -26,7 +26,7 @@ class TestReadmeExamples(unittest.TestCase):
         assert data.artists[2].name() is None
 
     def test_scalar_values(self):
-        data = Tether({"name": "John Doe", "age": 30, "is_active": True})
+        data = Chain({"name": "John Doe", "age": 30, "is_active": True})
         assert data.name == "John Doe"
         assert data.age == 30
         assert data.is_active == True  # noqa: E712
@@ -34,7 +34,7 @@ class TestReadmeExamples(unittest.TestCase):
         assert data.age + 10 == 40
 
     def test_arithmetic(self):
-        data = Tether({"price": 100, "quantity": 5})
+        data = Chain({"price": 100, "quantity": 5})
         assert data.price * data.quantity == 500
         assert data.missing + 10 == 10
         assert data.quantity**3 == 125
@@ -44,12 +44,12 @@ class TestReadmeExamples(unittest.TestCase):
         assert data.missing / 0 == 0
 
     def test_lists(self):
-        data = Tether({"names": ["Alice", "Bob", "Charlie"]})
+        data = Chain({"names": ["Alice", "Bob", "Charlie"]})
         assert data.names[0] == "Alice"
         assert data.names[50]() is None
 
     def test_nested_dicts(self):
-        data = Tether(
+        data = Chain(
             {
                 "user": {
                     "name": "Alice",
@@ -62,7 +62,7 @@ class TestReadmeExamples(unittest.TestCase):
         assert data.this.is_missing() is None
 
     def test_identity_comparisons(self):
-        data = Tether({"name": "John Doe", "age": 30, "is_active": True})
+        data = Chain({"name": "John Doe", "age": 30, "is_active": True})
         # Wrapped values are not the raw values — `is` against True/None fails.
         assert (data.is_active is True) is False
         assert (data.missing.key is None) is False
@@ -71,7 +71,7 @@ class TestReadmeExamples(unittest.TestCase):
         assert data.missing.key() is None
 
     def test_reserved_or_invalid_keys(self):
-        data = Tether({"123": "Hello World!", "jeffrey-epstein": "Didn't kill himself"})
+        data = Chain({"123": "Hello World!", "jeffrey-epstein": "Didn't kill himself"})
         assert data["123"] == "Hello World!"
         assert data["jeffrey-epstein"] == "Didn't kill himself"
 
@@ -87,29 +87,29 @@ class TestEdgeCases(unittest.TestCase):
             def shout(self):
                 return self.greeting.upper()
 
-        c = Tether(Greeter())
+        c = Chain(Greeter())
         assert c.greeting == "hi"
         assert c.shout() == "HI"
         assert c.missing() is None
 
     def test_tuple_indexing(self):
-        c = Tether((10, 20, 30))
+        c = Chain((10, 20, 30))
         assert c[0] == 10
         assert c[2] == 30
 
     def test_negative_list_indexing(self):
-        c = Tether([1, 2, 3])
+        c = Chain([1, 2, 3])
         assert c[-1] == 3
         assert c[-2] == 2
 
     def test_non_string_dict_keys(self):
-        c = Tether({1: "one", 2: "two"})
+        c = Chain({1: "one", 2: "two"})
         assert c[1] == "one"
         assert c[2] == "two"
 
     def test_double_wrapping_still_navigates(self):
-        # Wrapping a Tether currently nests rather than flattens, but operations
-        # still work through the layers because Tether is callable/comparable.
-        nested = Tether(Tether(5))
+        # Wrapping a Chain currently nests rather than flattens, but operations
+        # still work through the layers because Chain is callable/comparable.
+        nested = Chain(Chain(5))
         assert nested == 5
         assert nested + 3 == 8

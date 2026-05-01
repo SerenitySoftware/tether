@@ -1,6 +1,6 @@
 import unittest
 
-from tether import sniff
+from daisies import sniff
 
 
 class TestSniffs(unittest.TestCase):
