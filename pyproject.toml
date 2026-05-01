@@ -1,23 +1,46 @@
-[tool.black]
-line-length = 120
+[project]
+name = "tether"
+version = "0.1.0"
+description = "Python safe navigation for complex objects"
+authors = [
+    {name = "Jordan Ambra", email = "jordan@serenity.software"},
+]
+license = "Unlicense"
+readme = "README.md"
+keywords = ["tether", "safe navigation", "data access"]
+requires-python = ">=3.10,<4.0"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+]
 
-[tool.coverage.report]
-fail_under = 100
+[project.urls]
+Repository = "https://github.com/SerenitySoftware/tether"
 
 [tool.poetry]
-name = "chains"
-version = "1.0.0"
-description = "Python safe navigation for complex objects"
-authors = ["Jordan Ambra <jordan@serenity.software>"]
-
-[tool.poetry.dependencies]
-python = "^3.10"
+packages = [{include = "tether"}]
+exclude = ["tether/tests"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.3"
 black = "^26.3.1"
 flake8 = "^7.3.0"
 coverage = "^7.13.5"
+
+[tool.black]
+line-length = 120
+target-version = ["py310", "py311", "py312", "py313"]
+
+[tool.coverage.report]
+fail_under = 100
 
 [build-system]
 requires = ["poetry-core>=2.0.0"]
